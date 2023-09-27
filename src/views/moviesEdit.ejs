@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title class="titulo">Editar Película</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <figure>
+        <img src="/img/logo-DH.png" alt="Logo Digital House">
+      </figure>
+    <h1 class="titulo">Película a Editar:  <%= Movie.title %></h1>
+    <section class="formulario">
+        <form action="/movies/update/<%= Movie.id %>?_method=PUT" method="POST" class="row align-items-center card-form col-5 g-1">
+            
+            <label for="title" class="form-label">Title </label>
+            <p><input 
+                type="text" 
+                name="title" 
+                id="title" 
+                value="<%= Movie.title %>"
+                class="<%= locals.errors && (errors.title && 'is-invalid') %> form-control">
+            </p>
+            <small 
+                class="text-danger ms-2">
+                <%= locals.errors && (errors.title && errors.title.msg) %>
+            </small>
+
+            <label for="rating">Rating </label>
+            <p><input 
+                type="number" 
+                name="rating" 
+                id="rating" 
+                value="<%= Movie.rating %>"
+                class="<%= locals.errors && (errors.rating && 'is-invalid') %> form-control">
+            </p>
+            <small 
+                class="text-danger ms-2">
+                <%= locals.errors && (errors.rating && errors.rating.msg) %>
+            </small>
+
+            <label for="awards">Awards </label>
+            <p><input 
+                type="number" 
+                name="awards" 
+                id="awards" 
+                value="<%= Movie.awards %>"
+                class="<%= locals.errors && (errors.awards && 'is-invalid') %> form-control">
+            </p>
+            <small 
+                class="text-danger ms-2">
+                <%= locals.errors && (errors.awards && errors.awards.msg) %>
+            </small>
+
+            <label for="release_date">Release date </label>
+            <p><input 
+                type="date" 
+                name="release_date" 
+                id="release_date" 
+                value="<%= moment(Movie.release_date).format('YYYY-MM-DD') %>"
+                class="<%= locals.errors && (errors.release_date && 'is-invalid') %> form-control">
+            </p>
+            <small 
+                class="text-danger ms-2">
+                <%= locals.errors && (errors.release_date && errors.release_date.msg) %>
+            </small>
+
+            <label for="length">Length </label>
+            <p><input 
+                type="number" 
+                name="length" 
+                id="" 
+                value="<%= Movie.length %>"
+                class="<%= locals.errors && (errors.length && 'is-invalid') %> form-control">
+            </p>
+            <br>
+            <p> <button class="botonAgregar" type="submit">Actualizar</button>
+        
+            <a  class="botonVolver" href="/movies">Listado de Películas</a></p>
+        </form>
+    </section>
+</body>
+
+</html>
