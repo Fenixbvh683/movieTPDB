@@ -74,8 +74,6 @@ const moviesController = {
             })
         }
 
-        
-        
     },
     edit: function(req, res) {
         // TODO
@@ -92,49 +90,93 @@ const moviesController = {
     update: function (req,res) {
         // TODO
         const errors = validationResult(req);
-
-        if(errors.isEmpty()) {
-
+       
         const {title, rating, release_date, awards, length} = req.body
-        db.Movie.update(
-        {
-            title,
-            rating,
-            awards,
-            release_date,
-            length,
-        },
-        {
+        
+        if([title, rating, release_date, awards, length].includes("")) {
+
+            db.Movie.findByPk(req.params.id)
+        .then(movie =>{
+            //console.log(moment(movie.release_date).format('YYYY-MM-DD'))
+            return res.render('moviesEdit', {
+                Movie : movie,
+                moment,
+                errors : errors.mapped(),
+            })
+        })
+        .catch(error => console.log(error))
+          
+        }else{
+
+            db.Movie.update(
+                {
+                    title,
+                    rating,
+                    awards,
+                    release_date,
+                    length,
+                },
+                {
+                    where : {
+                        id : req.params.id
+                    }
+                })
+                .then(response => {
+                    console.log(response);
+                    return res.redirect('/movies/detail/'+ req.params.id)
+                    
+                }).catch(error => console.log(error))
+                             
+           }
+                  
+    },
+    delete: function (req, res) {
+        // TODO
+        db.Movie.findByPk(req.params.id).then((movie) =>{
+            return res.render("moviesDelete.ejs", { Movie : movie });
+        });
+    },
+    destroy: function (req, res) {
+        // TODO
+        const {id} = req.params;
+
+        db.ActorMovie.destroy({
             where : {
-                id : req.params.id
+                movie_id : id
             }
         })
         .then(response => {
             console.log(response);
-            db.Movie.findByPk(req.params.id)
-            .then(movie => {
-                return res.render('moviesDetail', {
 
-                    movie
+            db.Actor.update(
+                {
+                    favorite_movie_id : null
+                },
+                {
+                    where : {
+                        favorite_movie_id : id
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response);
 
+                db.Movie.destroy({
+                    where : {
+                        id
+                    }
+        
                 })
-                 
+                .then(response => {
+                    console.log(response);
+                    return res.redirect('/movies')
+                })
+
             })
-            
-        }).catch(error => console.log(error))
-    }else {
-        return res.render('moviesEdit',{
-            errors : errors.mapped(),
-            
         })
-    }
+        .catch(error => console.log(error))
+
     },
-    delete: function (req, res) {
-        // TODO
-    },
-    destroy: function (req, res) {
-        // TODO
-    }
 
 }
 
